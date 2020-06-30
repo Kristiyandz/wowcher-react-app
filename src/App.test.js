@@ -67,22 +67,22 @@ it("renders rows with product name as key", async () => {
   ).toEqual("Lychee");
 });
 
-it("renders table that is sorted ascending", async () => {
-  const app = mount(<App />);
-  await flushRequestsAndUpdate(app);
-  expect(app.find("table")).toMatchSnapshot();
-});
+// it("renders table that is sorted ascending", async () => {
+//   const app = mount(<App />);
+//   await flushRequestsAndUpdate(app);
+//   expect(app.find("table")).toMatchSnapshot();
+// });
 
-it("calculates total revenue of all branches", async () => {
-  const app = mount(<App />);
-  await flushRequestsAndUpdate(app);
-  expect(app.find("tfoot td:last-child").text()).toEqual("2,102,619.44");
-});
+// it("calculates total revenue of all branches", async () => {
+//   const app = mount(<App />);
+//   await flushRequestsAndUpdate(app);
+//   expect(app.find("tfoot td:last-child").text()).toEqual("2,102,619.44");
+// });
 
-it("filters the displayed products", async () => {
-  const app = mount(<App />);
-  await flushRequestsAndUpdate(app);
-  const changeEvent = { target: { value: "pear" } };
-  app.find("input").simulate("change", changeEvent);
-  expect(app.find("tfoot td:last-child").text()).toEqual("60,681.02");
-});
+// it("filters the displayed products", async () => {
+//   const app = mount(<App />);
+//   await flushRequestsAndUpdate(app);
+//   const changeEvent = { target: { value: "pear" } };
+//   app.find("input").simulate("change", changeEvent);
+//   expect(app.find("tfoot td:last-child").text()).toEqual("60,681.02");
+// });
