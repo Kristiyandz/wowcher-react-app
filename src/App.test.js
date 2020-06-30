@@ -67,11 +67,12 @@ it("renders rows with product name as key", async () => {
   ).toEqual("Lychee");
 });
 
-// it("renders table that is sorted ascending", async () => {
-//   const app = mount(<App />);
-//   await flushRequestsAndUpdate(app);
-//   expect(app.find("table")).toMatchSnapshot();
-// });
+it("renders table that is sorted ascending", async () => {
+  const app = mount(<App />);
+  await flushRequestsAndUpdate(app);
+  app.debug()
+  expect(app.find("table")).toMatchSnapshot();
+});
 
 // it("calculates total revenue of all branches", async () => {
 //   const app = mount(<App />);

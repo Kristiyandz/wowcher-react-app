@@ -1,12 +1,19 @@
 import React, { Component } from "react";
-
+import { 
+  sortAscendingByName,
+  extractDuplicates,
+  getUniqueProducts,
+  calculateProductRevenue,
+  calculateTotalRevenue
+} from "./util"
 import "./App.css";
 
-const formatNumber = (number) => new Intl.NumberFormat("en", { minimumFractionDigits: 2 }).format(number);
+export const formatNumber = (number) => new Intl.NumberFormat("en", { minimumFractionDigits: 2 }).format(number);
 class App extends Component {
   state = {
     isLoading: false,
-    prodcts: []
+    prodcts: [],
+    total: 0
   }
   async singleCall(num) {
     const response = await fetch(`api/branch${num}.json`);
@@ -23,22 +30,18 @@ class App extends Component {
     this.getData()
       .then(([branchOne, branchTwo, branchThree]) => {
         const allProducts =  [...branchOne.products, ...branchTwo.products, ...branchThree.products];
-        allProducts.sort((a, b) => {
-          if(a.name < b.name) return -1;
-          return a.name > b.name ? 1 : 0
-        })
 
-        const getUnique = (arr, comp) => {
-          const unique = arr.map(e => e[comp])
-          .map((e, i, final) => final.indexOf(e) === i && i)
-          .filter(e => arr[e]).map(e => arr[e]) 
-          return unique;
-        }
-        const uniqueArr = getUnique(allProducts, "name");
+        const duplicates = extractDuplicates(allProducts, "name");
+        const unique = getUniqueProducts(allProducts, "name");
+        const sortedUnique = sortAscendingByName(unique);
+        const productsWithTotalRevenue = calculateProductRevenue(sortedUnique, duplicates);
+        const totalrevenue = calculateTotalRevenue(productsWithTotalRevenue);
 
+    
         this.setState({
           isLoading: false,
-          prodcts: uniqueArr
+          prodcts: productsWithTotalRevenue,
+          total: totalrevenue
         })
       })
       .catch(error => {
@@ -65,7 +68,7 @@ class App extends Component {
             {this.state.prodcts.map(product => (
               <tr key={product.name}>
                 <th>{product.name}</th>
-                <th>{product.unitPrice}</th>
+                <th>{formatNumber(product.sold * product.unitPrice)}</th>
               </tr>
             ))}
 
@@ -73,7 +76,7 @@ class App extends Component {
           <tfoot>
             <tr>
               <td>Total</td>
-              <td></td>
+              <td>{formatNumber(this.state.total)}</td>
             </tr>
           </tfoot>
         </table>
